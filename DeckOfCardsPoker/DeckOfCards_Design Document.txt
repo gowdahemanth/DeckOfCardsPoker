@@ -1,0 +1,83 @@
+Input validation assumptions made:
+
+A valid player name will have alpha numeric characters and spaces. Names with special characters will be ignored.
+
+1. In Input 1, player 1, player 2 and player 3 4 are valid. Player % is not valid. So the application will execute with only three players. 
+
+2. Input 2 is an empty file, so during input validation application will exist with a log message.
+
+3. Input 3 has 11 players. Only the first 10 players will be valid players. Player 11 will be discarded with a log message.
+
+4. Input 4 has some unreadable text. No valid player and application exists.
+-------------------------------------------------------------------------------------------------------------
+All requirements are met:
+
+Create a program that meets the following requirements:
+1) Read a list of player names from an input file
+The class 'ReadAndValidateInput' has the logic to parse the file and returns a list of players.
+
+2) Assign each player a set of 5 randomly selected cards from a card deck
+The 'Hand' class constructor assigns 5 cards for each player.
+
+3) Display the players and their cards
+Done.
+
+4) Declare a winner
+Done.
+
+---------------------------------------------------------------------------------------------------------------------------------
+
+Design:
+Main Classes: 
+1. Card: Represents a single Card entity. It comprises two properties 'Suit' and 'Rank'
+Suit: It is an enumeration of
+    {
+        HEARTS = 0,
+        DIAMONDS,
+        CLUBS,
+        SPADES
+    }
+	
+Rank: It is an enumeration of 
+    {        
+        TWO = 2,
+        THREE,
+        FOUR,
+        FIVE,
+        SIX,
+        SEVEN,
+        EIGHT,
+        NINE,
+        TEN,
+        JACK,
+        QUEEN,
+        KING,
+        ACE
+    }
+	
+2. Deck: Represents a collection of 52 cards. It provides the following actions: 
+	Create a deck of cards,
+	Shuffle the cards,
+    Draw a card.
+	
+3. Hand: Represents each players Cards, player name and Hand ranking. 
+   It provides the following operations:
+   Picking 5 cards for each player,
+   Displaying player name, cards and ranking,
+   Computing the rank.
+   
+Hand Ranking Computation:
+I referenced the article (http://www.mathcs.emory.edu/~cheung/Courses/170/Syllabus/10/pokerCheck.html) to implement the hand ranking computation. But I completely refactored how it is desinged.
+
+I applied Single Responsibility Principle (SRP) to seperate out the computation of each hand ranking. This way each type of hand ranking has its own class and is responsible for only one thing. This approach also adheres to the concept of Open-closed Principle (OCP), where in if we want to add a new ranking category in future we just have to add a new class that implements the interface and no need to modify any existing classes.
+
+All the hand rankings categories are a set of related alogorithms. So i grouped them under one interface 'IHandRankingCategory' which provides a layer of abstraction (Stratergy pattern) for the client code. The class 'RankingImplementer' provides a common place for invoking all hand rankings. This way we decouple the logic of hand ranking from client code (Player/ Hand).
+
+----------------------------------------------------------------------------------------------------------------------------------
+
+References:
+1. Code to determine various types of hand rankings: http://www.mathcs.emory.edu/~cheung/Courses/170/Syllabus/10/pokerCheck.html
+2. List of poker hands: https://en.wikipedia.org/wiki/List_of_poker_hands
+3. Referred to few other articles to get a general understanding: 
+https://www2.cs.duke.edu/csed/ap/cards/cardstuff.pdf
+https://www.codeproject.com/Articles/38821/Make-a-poker-hand-evalutator-in-Java?msg=5577961
